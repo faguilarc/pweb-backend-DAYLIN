@@ -7,10 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,59 +19,74 @@ public class YearServiceImpl implements YearService {
 
     @Override
     public void createYear(YearDto year) throws SQLException {
-        CallableStatement CS = jdbcTemplate.getDataSource().getConnection().prepareCall("{call year_insert(?, ?)}");
-        CS.setString(1, year.getId_year());
-        CS.setString(2,year.getYear());
+        try {
+            CallableStatement CS = jdbcTemplate.getDataSource().getConnection().prepareCall("{call year_insert(?, ?)}");
+            CS.setString(1, year.getId_year());
+            CS.setString(2,year.getYear());
 
-        CS.executeUpdate();
+            CS.executeUpdate();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public void updateYear(YearDto year) throws SQLException {
-        CallableStatement CS = jdbcTemplate.getDataSource().getConnection().prepareCall("{call year_update(?,?)}");
-        CS.setString(1, year.getId_year());
-        CS.setString(2,year.getYear());
-        CS.execute();
-        CS.close();
+        try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
+            PreparedStatement pstmt = conn.prepareStatement("{call year_update(?,?)}");
+            pstmt.setString(1, year.getId_year());
+            pstmt.setString(2,year.getYear());
+            pstmt.executeUpdate();
+        }
+        //CallableStatement CS = jdbcTemplate.getDataSource().getConnection().prepareCall();
+
     }
 
     @Override
     public List<YearDto> listYear() throws SQLException {
         List<YearDto> yearList = new ArrayList<YearDto>();
-        ResultSet rs = jdbcTemplate.getDataSource().getConnection().createStatement().executeQuery(
-                "SELECT * FROM year");
-
-        while(rs.next()){
-            yearList.add(new YearDto(rs.getString("id_year")
-                    ,rs.getString("year")));
+        try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
+            ResultSet rs = conn.createStatement().executeQuery(
+                    "SELECT * FROM year");
+            while(rs.next()){
+                yearList.add(new YearDto(rs.getString("id_year")
+                        ,rs.getString("year")));
+            }
         }
+
         return yearList;
     }
 
     @Override
     public YearDto getYearById(String id) throws SQLException {
         YearDto year = null;
+        try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
+            PreparedStatement pstmt = conn.prepareStatement(
+                    "SELECT * FROM year where id_year = ?");
 
-        PreparedStatement pstmt = jdbcTemplate.getDataSource().getConnection().prepareStatement(
-                "SELECT * FROM year where id_year = ?");
+            pstmt.setString(1, id);
 
-        pstmt.setString(1, id);
+            ResultSet rs = pstmt.executeQuery();
 
-        ResultSet rs = pstmt.executeQuery();
-
-        while(rs.next()){
-            year = new YearDto(rs.getString("id_year")
-                    ,rs.getString("year"));
+            while(rs.next()){
+                year = new YearDto(rs.getString("id_year")
+                        ,rs.getString("year"));
+            }
         }
+
         return year;
     }
 
     @Override
     public void deleteYear(String id) throws SQLException {
-        CallableStatement CS = jdbcTemplate.getDataSource().getConnection().prepareCall(
-                "{call year_delete(?)}");
+        try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
+            CallableStatement CS = conn.prepareCall(
+                    "{call year_delete(?)}");
 
-        CS.setString(1, id);
-        CS.executeUpdate();
+            CS.setString(1, id);
+            CS.executeUpdate();
+        }
+
     }
 }
