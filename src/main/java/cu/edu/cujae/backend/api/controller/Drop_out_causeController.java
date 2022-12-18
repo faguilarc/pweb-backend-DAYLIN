@@ -35,13 +35,14 @@ public class Drop_out_causeController {
     }
 
     @PutMapping("")
-    public ResponseEntity<String> update(@RequestBody Drop_out_causeDto drop_out_cause) throws SQLException {
+    public ResponseEntity<String> update(@RequestBody Drop_out_causeDto drop_out_cause) throws SQLException{
         drop_out_causeService.updateDrop_out_cause(drop_out_cause);
         return ResponseEntity.ok("Drop_out_cause Updated");
     }
 
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable String id) throws SQLException {
+    public ResponseEntity<String> delete(@PathVariable String id)throws SQLException{
         drop_out_causeService.deleteDrop_out_cause(id);
         return ResponseEntity.ok("Drop_out_cause deleted");
     }

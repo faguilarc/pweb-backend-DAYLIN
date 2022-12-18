@@ -38,12 +38,11 @@ public class Drop_out_causeServiceImpl implements Drop_out_causeService {
 
             PreparedStatement pstmt = conn.prepareStatement("update drop_out_cause set drop_out_cause = ? where id_drop_out_cause = ?");
 
-            pstmt.setString(1,drop_out_cause.getDrop_out_cause());
             pstmt.setString(2,drop_out_cause.getId_drop_out_cause());
-
-            pstmt.executeUpdate();
+            pstmt.setString(1,drop_out_cause.getDrop_out_cause());
         }
     }
+
 
     @Override
     public List<Drop_out_causeDto> listDrop_out_cause() throws SQLException {
@@ -83,10 +82,12 @@ public class Drop_out_causeServiceImpl implements Drop_out_causeService {
     @Override
     public void deleteDrop_out_cause(String id) throws SQLException {
         try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
-            PreparedStatement pstmt = conn.prepareStatement(
-                    "DELETE FROM drop_out_cause where id_drop_out_cause = ?");
-            pstmt.setString(1, id);
-            pstmt.executeUpdate();
+            CallableStatement CS = conn.prepareCall("{call drop_out_cause_delete(?)}");
+
+            CS.setString(1, id);
+            CS.executeUpdate();
         }
     }
+
+
 }
