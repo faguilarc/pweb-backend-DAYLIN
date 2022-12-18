@@ -35,11 +35,13 @@ public class Drop_out_causeServiceImpl implements Drop_out_causeService {
     @Override
     public void updateDrop_out_cause(Drop_out_causeDto drop_out_cause) throws SQLException {
         try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
+            CallableStatement CS = jdbcTemplate.getDataSource().getConnection().prepareCall("{call drop_out_cause_update(?, ?)}");
+            CS.setString(1, drop_out_cause.getId_drop_out_cause());
+            CS.setString(2,drop_out_cause.getDrop_out_cause());
 
-            PreparedStatement pstmt = conn.prepareStatement("update drop_out_cause set drop_out_cause = ? where id_drop_out_cause = ?");
+            CS.executeUpdate();
 
-            pstmt.setString(2,drop_out_cause.getId_drop_out_cause());
-            pstmt.setString(1,drop_out_cause.getDrop_out_cause());
+            System.out.println("PAsamooooos por AQUIIIIIIIIIIIIIII");
         }
     }
 
@@ -82,10 +84,11 @@ public class Drop_out_causeServiceImpl implements Drop_out_causeService {
     @Override
     public void deleteDrop_out_cause(String id) throws SQLException {
         try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
-            CallableStatement CS = conn.prepareCall("{call drop_out_cause_delete(?)}");
+            CallableStatement CS = conn.prepareCall("delete  from drop_out_cause where id_drop_out_cause = ?");
 
             CS.setString(1, id);
             CS.executeUpdate();
+            System.out.println("PAsamooooos por AQUIIIIIIIIIIIIIII");
         }
     }
 
