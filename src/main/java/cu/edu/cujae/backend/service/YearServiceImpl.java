@@ -86,6 +86,5 @@ public class YearServiceImpl implements YearService {
             CS.setString(1, id);
             CS.executeUpdate();
         }
-
     }
 }
