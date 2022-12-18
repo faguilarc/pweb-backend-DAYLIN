@@ -42,8 +42,6 @@ public class YearServiceImpl implements YearService {
 
             pstmt.executeUpdate();
         }
-
-
     }
 
     @Override
@@ -57,7 +55,6 @@ public class YearServiceImpl implements YearService {
                         ,rs.getString("year")));
             }
         }
-
         return yearList;
     }
 
@@ -67,7 +64,6 @@ public class YearServiceImpl implements YearService {
         try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
             PreparedStatement pstmt = conn.prepareStatement(
                     "SELECT * FROM year where id_year = ?");
-
             pstmt.setString(1, id);
 
             ResultSet rs = pstmt.executeQuery();

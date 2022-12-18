@@ -42,7 +42,6 @@ public void setId_year( String id_year) {
 	this.id_year=id_year;
 }
 
-
 public void setYear( String year) {
 	this.year=year;
 }
