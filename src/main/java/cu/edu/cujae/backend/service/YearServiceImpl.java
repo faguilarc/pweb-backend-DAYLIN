@@ -34,12 +34,15 @@ public class YearServiceImpl implements YearService {
     @Override
     public void updateYear(YearDto year) throws SQLException {
         try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
-            PreparedStatement pstmt = conn.prepareStatement("{call year_update(?,?)}");
-            pstmt.setString(1, year.getId_year());
-            pstmt.setString(2,year.getYear());
+
+            PreparedStatement pstmt = conn.prepareStatement("update year set year = ? where id_year = ?");
+
+            pstmt.setString(2, year.getId_year());
+            pstmt.setString(1, year.getYear());
+
             pstmt.executeUpdate();
         }
-        //CallableStatement CS = jdbcTemplate.getDataSource().getConnection().prepareCall();
+
 
     }
 
