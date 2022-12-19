@@ -54,7 +54,6 @@ public class GroupsServiceImpl implements GroupsService {
     public List<GroupsDto> listGroups() throws SQLException {
         List<GroupsDto> groupsList = new ArrayList<GroupsDto>();
         try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
-           PreparedStatement pstm = conn.prepareStatement("SELECT * FROM groups");
 
             ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM groups");
 
