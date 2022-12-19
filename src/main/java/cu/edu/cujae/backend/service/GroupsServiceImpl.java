@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 @Component
 public class GroupsServiceImpl implements GroupsService {
-
+    @Autowired
     private YearService yearService;
 
     @Autowired
@@ -54,8 +54,9 @@ public class GroupsServiceImpl implements GroupsService {
     public List<GroupsDto> listGroups() throws SQLException {
         List<GroupsDto> groupsList = new ArrayList<GroupsDto>();
         try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
-            ResultSet rs = conn.createStatement().executeQuery(
-                    "SELECT * FROM groups");
+           PreparedStatement pstm = conn.prepareStatement("SELECT * FROM groups");
+
+            ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM groups");
 
             while(rs.next()){
                 System.out.println("Entreee a rellenar la lista");

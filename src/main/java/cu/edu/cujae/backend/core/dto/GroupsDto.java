@@ -47,6 +47,9 @@ public class GroupsDto {
 		return id_year;
 	}
 
+	public YearDto getYearDto() {
+		return yearDto;
+	}
 
 	public void setId_group(String id_group) {
 		this.id_group = id_group;
@@ -62,4 +65,7 @@ public class GroupsDto {
 		this.id_year = id_year;
 	}
 
+	public void setYearDto(YearDto yearDto) {
+		this.yearDto = yearDto;
+	}
 }
