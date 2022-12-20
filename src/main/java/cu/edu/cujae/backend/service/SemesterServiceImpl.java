@@ -25,14 +25,16 @@ public class SemesterServiceImpl implements SemesterService {
     private JdbcTemplate jdbcTemplate;
     @Override
     public void createSemester(SemesterDto semester) throws SQLException {
-        try {
-            CallableStatement CS = jdbcTemplate.getDataSource().getConnection().prepareCall("{call semester_insert(?, ?, ?, ?)}");
+        try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
+            CallableStatement CS = conn.prepareCall("{call semester_insert(?, ?, ?, ?)}");
+
             CS.setString(1,semester.getId_semester());
             CS.setString(2,semester.getSemester());
             CS.setString(3,semester.getId_year());
             CS.setString(4,semester.getId_course());
 
             CS.executeUpdate();
+            CS.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -49,6 +51,7 @@ public class SemesterServiceImpl implements SemesterService {
             pstmt.setString(4,semester.getId_semester());
 
             pstmt.executeUpdate();
+            pstmt.close();
         }
 
     }
@@ -69,6 +72,7 @@ public class SemesterServiceImpl implements SemesterService {
                         ,yearService.getYearById(rs.getString("id_year"))
                         ,courseService.getCourseById(rs.getString("id_course"))));
             }
+            rs.close();
         }
         return semesterList;
     }
@@ -92,6 +96,8 @@ public class SemesterServiceImpl implements SemesterService {
                         ,yearService.getYearById(rs.getString("id_year"))
                         ,courseService.getCourseById(rs.getString("id_course")));
             }
+            rs.close();
+            pstmt.close();
         }
         return semester;
     }

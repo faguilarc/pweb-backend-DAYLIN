@@ -25,6 +25,7 @@ public class YearServiceImpl implements YearService {
             CS.setString(2,year.getYear());
 
             CS.executeUpdate();
+            CS.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -41,6 +42,7 @@ public class YearServiceImpl implements YearService {
             pstmt.setString(1, year.getYear());
 
             pstmt.executeUpdate();
+            pstmt.close();
         }
     }
 
@@ -54,6 +56,7 @@ public class YearServiceImpl implements YearService {
                 yearList.add(new YearDto(rs.getString("id_year")
                         ,rs.getString("year")));
             }
+            rs.close();
         }
         return yearList;
     }
@@ -72,6 +75,8 @@ public class YearServiceImpl implements YearService {
                 year = new YearDto(rs.getString("id_year")
                         ,rs.getString("year"));
             }
+            pstmt.close();
+            rs.close();
         }
 
         return year;
@@ -85,6 +90,7 @@ public class YearServiceImpl implements YearService {
 
             CS.setString(1, id);
             CS.executeUpdate();
+            CS.close();
         }
     }
 }

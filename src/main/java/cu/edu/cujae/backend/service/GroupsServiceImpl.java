@@ -23,13 +23,14 @@ public class GroupsServiceImpl implements GroupsService {
 
     @Override
     public void createGroups(GroupsDto groups) throws SQLException {
-        try {
-            CallableStatement CS = jdbcTemplate.getDataSource().getConnection().prepareCall("{call groups_insert(?, ?, ?)}");
+        try(Connection conn = jdbcTemplate.getDataSource().getConnection()) {
+            CallableStatement CS = conn.prepareCall("{call groups_insert(?, ?, ?)}");
             CS.setString(1,groups.getId_group());
             CS.setString(2, groups.getGroup_name());
             CS.setString(3, groups.getId_year());
 
             CS.executeUpdate();
+            CS.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -46,6 +47,7 @@ public class GroupsServiceImpl implements GroupsService {
             pstmt.setString(3, groups.getId_group());
 
             pstmt.executeUpdate();
+            pstmt.close();
         }
 
     }
@@ -64,6 +66,7 @@ public class GroupsServiceImpl implements GroupsService {
                         ,rs.getString("id_year")
                         ,yearService.getYearById(rs.getString("id_year"))));
             }
+            rs.close();
         }
         return groupsList;
     }
@@ -85,6 +88,8 @@ public class GroupsServiceImpl implements GroupsService {
                         ,rs.getString("id_year")
                         ,yearService.getYearById(rs.getString("id_year")));
             }
+            pstmt.close();
+            rs.close();
         }
 
         return groups;
@@ -98,6 +103,7 @@ public class GroupsServiceImpl implements GroupsService {
 
             CS.setString(1, id);
             CS.executeUpdate();
+            CS.close();
         }
     }
 }

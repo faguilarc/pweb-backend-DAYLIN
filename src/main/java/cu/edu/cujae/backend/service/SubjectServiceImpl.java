@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +23,16 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public void createSubject(SubjectDto subject) throws SQLException {
-        try {
-            CallableStatement CS = jdbcTemplate.getDataSource().getConnection().prepareCall("{call subject_insert(?, ?, ?, ?)}");
+        try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
+            CallableStatement CS = conn.prepareCall("{call subject_insert(?, ?, ?, ?)}");
             CS.setString(1,subject.getId_subject());
             CS.setString(2, subject.getSubject());
             CS.setString(3,subject.getId_semester());
             CS.setInt(4, subject.getHour());
 
             CS.executeUpdate();
-        }catch (Exception e){
-            e.printStackTrace();
+
+
         }
 
     }
@@ -55,10 +56,10 @@ public class SubjectServiceImpl implements SubjectService {
     public List<SubjectDto> listSubject() throws SQLException {
         List<SubjectDto> subjectList = new ArrayList<SubjectDto>();
         try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
+            PreparedStatement ps = conn.prepareStatement("Select * from subject");
 
-            ResultSet rs = conn.createStatement().executeQuery(
-                    "SELECT * FROM subject");
-
+        //    ResultSet rs = conn.createStatement().executeQuery("SELECT * FROM subject");
+            ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 subjectList.add(new SubjectDto(rs.getString("id_subject")
                         ,rs.getString("subject")
