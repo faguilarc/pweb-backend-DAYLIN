@@ -1,6 +1,5 @@
 package cu.edu.cujae.backend.core.service;
 
-import cu.edu.cujae.backend.core.dto.CourseDto;
 import cu.edu.cujae.backend.core.dto.StudentHistoryDto;
 
 import java.sql.SQLException;

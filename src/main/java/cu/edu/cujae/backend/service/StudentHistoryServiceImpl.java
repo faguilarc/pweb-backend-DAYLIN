@@ -114,7 +114,7 @@ public class StudentHistoryServiceImpl<historyDto> implements StudentHistoryServ
     @Override
     public void deleteStudentHistory(String id) throws SQLException {
         try (Connection conn = jdbcTemplate.getDataSource().getConnection()){
-            CallableStatement cs = conn.prepareCall("{call student_history_delete(?,?,?,?,?)}");
+            CallableStatement cs = conn.prepareCall("{call student_history_delete(?)}");
             cs.setString(1,id);
 
             cs.executeUpdate();
